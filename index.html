@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TakipÖz Portföy</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #e4e7ec;
+      --accent: #2563eb;
+      --accent-2: #0f766e;
+      --danger: #dc2626;
+      --warn: #b45309;
+      --shadow: 0 12px 28px rgba(16,24,40,.08);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 220px);
+      color: var(--text);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+    }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px 14px 56px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8, #0f766e);
+      color: white;
+      border-radius: 28px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+    .hero p {
+      margin: 0;
+      color: rgba(255,255,255,.92);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .toolbar, .summary, .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-top: 14px;
+    }
+    .toolbar { padding: 14px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
+    }
+    .field { grid-column: span 12; }
+    .field.half { grid-column: span 6; }
+    .field.third { grid-column: span 4; }
+    .field.two { grid-column: span 2; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin: 0 0 6px;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 13px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #9ec5ff;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.08);
+    }
+    button {
+      border: 0;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .08s ease, opacity .15s ease;
+    }
+    button:active { transform: scale(.99); }
+    .primary { background: var(--accent); color: white; }
+    .secondary { background: #eef2ff; color: #2847a1; }
+    .ghost { background: #f8fafc; color: #334155; border: 1px solid var(--line); }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .summary {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .metric {
+      background: #f8fafc;
+      border: 1px solid #edf2f7;
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .metric .k { color: var(--muted); font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+    .metric .v { font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
+    .metric .s { font-size: 12px; margin-top: 6px; color: var(--muted); }
+    .card { overflow: hidden; }
+    .card-head {
+      padding: 16px 16px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .card-body { padding: 0 0 8px; }
+    .table-wrap { overflow: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+    }
+    th, td {
+      padding: 12px 14px;
+      border-top: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+    th {
+      color: var(--muted);
+      background: #fbfcfe;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #eef2ff;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .up { color: #166534; }
+    .down { color: #991b1b; }
+    .muted { color: var(--muted); }
+    .pill-ok { background: #dcfce7; color: #166534; }
+    .pill-warn { background: #fef3c7; color: #92400e; }
+    .pill-bad { background: #fee2e2; color: #991b1b; }
+    .row-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .mini {
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      width: auto;
+    }
+    .footer-note {
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      padding: 0 2px;
+    }
+    .statusbar {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #eff6ff;
+      color: #1d4ed8;
+      display: none;
+    }
+    .statusbar.show { display: block; }
+    .help {
+      margin-top: 12px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #854d0e;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    @media (max-width: 860px) {
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      .field.half, .field.third, .field.two { grid-column: span 12; }
+      .hero h1 { font-size: 24px; }
+    }
+    @media (max-width: 560px) {
+      .summary { grid-template-columns: 1fr; }
+      .wrap { padding: 12px 10px 42px; }
+      .hero { padding: 18px 14px; border-radius: 22px; }
+      .toolbar, .summary, .card { border-radius: 18px; }
+      th, td { padding: 11px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>TakipÖz Portföy</h1>
+      <p>Fon, gram altın, 22 ayar, 24 ayar, USD ve EUR otomatik güncellenir. Tüm veriler cihazında saklanır. Tek dosyadır; GitHub veya Netlify’a sadece bunu yüklemen yeter.</p>
+    </section>
+
+    <section class="toolbar">
+      <div class="grid">
+        <div class="field third">
+          <label>Varlık Türü</label>
+          <select id="assetType" onchange="syncHints()">
+            <option value="fund">Fon (TEFAS)</option>
+            <option value="gold24">24 Ayar Gram Altın</option>
+            <option value="gold22">22 Ayar Gram Altın</option>
+            <option value="usd">USD</option>
+            <option value="eur">EUR</option>
+            <option value="manual">Manuel</option>
+          </select>
+        </div>
+        <div class="field third">
+          <label>Kod / Kısa Ad</label>
+          <input id="assetCode" placeholder="Örn: TLY, PHE, USD, ALTIN" />
+        </div>
+        <div class="field third">
+          <label>Görünen Ad</label>
+          <input id="assetName" placeholder="Boş bırakılırsa kod kullanılır" />
+        </div>
+        <div class="field third">
+          <label>Miktar</label>
+          <input id="assetQty" inputmode="decimal" placeholder="Örn: 5 veya 12,75" />
+        </div>
+        <div class="field third">
+          <label>Alış Fiyatı (birim)</label>
+          <input id="assetBuy" inputmode="decimal" placeholder="Örn: 5030,55" />
+        </div>
+        <div class="field third">
+          <label>Manuel Güncel Fiyat</label>
+          <input id="assetManualPrice" inputmode="decimal" placeholder="Sadece manuel türünde gerekli" />
+        </div>
+        <div class="field third"><button class="primary" onclick="addAsset()">Varlık Ekle</button></div>
+        <div class="field third"><button class="secondary" onclick="updateAll(true)">Tümünü Güncelle</button></div>
+        <div class="field third"><button class="ghost" onclick="exportJson()">Yedek İndir</button></div>
+        <div class="field third"><button class="ghost" onclick="triggerImport()">Yedek Yükle</button></div>
+        <div class="field third"><button class="danger" onclick="clearAllAssets()">Tümünü Sil</button></div>
+      </div>
+      <input id="importFile" type="file" accept="application/json" style="display:none" onchange="importJson(event)" />
+      <div id="status" class="statusbar"></div>
+      <div class="help">
+        <b>Not:</b> Fonlar TEFAS’tan, USD/EUR Frankfurter’dan, gram altın ise USD altın fiyatı + kur birleşiminden hesaplanır. 22 ayar, 24 ayarın <b>22/24</b> oranlı karşılığıdır.
+      </div>
+    </section>
+
+    <section class="summary">
+      <div class="metric">
+        <div class="k">Toplam Portföy</div>
+        <div class="v" id="sumTotal">₺0,00</div>
+        <div class="s" id="sumAssets">0 varlık</div>
+      </div>
+      <div class="metric">
+        <div class="k">Maliyet</div>
+        <div class="v" id="sumCost">₺0,00</div>
+        <div class="s">Alış toplamı</div>
+      </div>
+      <div class="metric">
+        <div class="k">Kâr / Zarar</div>
+        <div class="v" id="sumPnL">₺0,00</div>
+        <div class="s" id="sumPnLPct">%0,00</div>
+      </div>
+      <div class="metric">
+        <div class="k">Son Güncelleme</div>
+        <div class="v" id="sumUpdated" style="font-size:20px">—</div>
+        <div class="s">Cihaz saati</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>Varlık Listesi</h2>
+        <div class="badge" id="liveInfo">Hazır</div>
+      </div>
+      <div class="card-body table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Tür</th>
+              <th>Kod / Ad</th>
+              <th>Miktar</th>
+              <th>Alış</th>
+              <th>Güncel</th>
+              <th>Toplam</th>
+              <th>K/Z</th>
+              <th>Durum</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="assetRows">
+            <tr><td colspan="9" class="muted">Henüz varlık eklenmedi.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      Bu sürüm tek HTML dosyasıdır. İlk açılışta otomatik güncelleme dener. Tarayıcı bir kaynağı engellerse ilgili satırda uyarı görünür ama diğer varlıklar çalışmaya devam eder.
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'takipoz-portfoy-v2';
+    let assets = loadAssets();
+
+    function loadAssets() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveAssets() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(assets));
+    }
+
+    function uid() {
+      return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    }
+
+    function parseNumber(value) {
+      if (value === null || value === undefined) return 0;
+      const str = String(value).trim();
+      if (!str) return 0;
+      const normalized = str.replace(/\s+/g, '').replace(/\./g, '').replace(',', '.');
+      const num = Number(normalized);
+      return Number.isFinite(num) ? num : 0;
+    }
+
+    function fmtMoney(v) {
+      return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY', maximumFractionDigits: 2 }).format(v || 0);
+    }
+
+    function fmtNum(v, digits = 4) {
+      return new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: digits }).format(v || 0);
+    }
+
+    function typeLabel(type) {
+      return ({
+        fund: 'Fon',
+        gold24: '24 Ayar',
+        gold22: '22 Ayar',
+        usd: 'USD',
+        eur: 'EUR',
+        manual: 'Manuel'
+      })[type] || type;
+    }
+
+    function showStatus(text, tone = 'info') {
+      const el = document.getElementById('status');
+      el.textContent = text;
+      el.className = 'statusbar show';
+      if (tone === 'error') {
+        el.style.background = '#fef2f2';
+        el.style.color = '#b91c1c';
+      } else if (tone === 'warn') {
+        el.style.background = '#fffbeb';
+        el.style.color = '#92400e';
+      } else {
+        el.style.background = '#eff6ff';
+        el.style.color = '#1d4ed8';
+      }
+    }
+
+    function hideStatusLater() {
+      setTimeout(() => document.getElementById('status').classList.remove('show'), 3500);
+    }
+
+    function syncHints() {
+      const type = document.getElementById('assetType').value;
+      const code = document.getElementById('assetCode');
+      const manual = document.getElementById('assetManualPrice');
+      if (type === 'fund') code.placeholder = 'Örn: TLY, PHE';
+      else if (type === 'gold24') code.placeholder = 'Örn: 24 Ayar';
+      else if (type === 'gold22') code.placeholder = 'Örn: 22 Ayar';
+      else if (type === 'usd') code.placeholder = 'USD';
+      else if (type === 'eur') code.placeholder = 'EUR';
+      else code.placeholder = 'Örn: Nakit';
+      manual.disabled = type !== 'manual';
+      if (type !== 'manual') manual.value = '';
+    }
+
+    async function fetchJson(url, options = {}, timeout = 18000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        const res = await fetch(url, { ...options, signal: controller.signal });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function fetchText(url, options = {}, timeout = 18000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        const res = await fetch(url, { ...options, signal: controller.signal });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.text();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function getUsdTry() {
+      const d = await fetchJson('https://api.frankfurter.dev/v2/rate/USD/TRY');
+      if (!d || typeof d.rate !== 'number') throw new Error('USD kuru alınamadı');
+      return d.rate;
+    }
+
+    async function getEurTry() {
+      const d = await fetchJson('https://api.frankfurter.dev/v2/rate/EUR/TRY');
+      if (!d || typeof d.rate !== 'number') throw new Error('EUR kuru alınamadı');
+      return d.rate;
+    }
+
+    async function getGold24Try() {
+      const [csv, usdTry] = await Promise.all([
+        fetchText('https://freegoldapi.com/data/latest.csv'),
+        getUsdTry()
+      ]);
+      const lines = csv.trim().split(/\r?\n/).filter(Boolean);
+      if (lines.length < 2) throw new Error('Altın verisi alınamadı');
+      const last = lines[lines.length - 1].split(',');
+      const usdPerOunce = Number(last[1]);
+      if (!Number.isFinite(usdPerOunce)) throw new Error('Altın fiyatı çözülemedi');
+      const gram24 = (usdPerOunce / 31.1034768) * usdTry;
+      return gram24;
+    }
+
+    async function getFundPrice(code) {
+      const body = new URLSearchParams({ dil: 'TR', fonkod: String(code || '').toUpperCase().trim() });
+      const data = await fetchJson('https://www.tefas.gov.tr/api/DB/GetAllFundAnalyzeData', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: body.toString()
+      }, 20000);
+
+      const info = data?.fundInfo?.[0];
+      if (!info) throw new Error('Fon bulunamadı');
+      const price = Number(info.SONFIYAT);
+      if (!Number.isFinite(price) || price <= 0) throw new Error('Fon fiyatı çözülemedi');
+      return {
+        price,
+        title: info.FONUNVAN || info.FONUNVANI || info.FONADI || String(code || '').toUpperCase().trim()
+      };
+    }
+
+    async function resolveAutoPrice(asset) {
+      switch (asset.type) {
+        case 'fund': {
+          const d = await getFundPrice(asset.code);
+          return { price: d.price, title: d.title, source: 'TEFAS' };
+        }
+        case 'usd':
+          return { price: await getUsdTry(), title: asset.name || 'USD/TRY', source: 'Frankfurter' };
+        case 'eur':
+          return { price: await getEurTry(), title: asset.name || 'EUR/TRY', source: 'Frankfurter' };
+        case 'gold24':
+          return { price: await getGold24Try(), title: asset.name || '24 Ayar Gram Altın', source: 'Gold+FX' };
+        case 'gold22': {
+          const gram24 = await getGold24Try();
+          return { price: gram24 * (22 / 24), title: asset.name || '22 Ayar Gram Altın', source: 'Gold+FX' };
+        }
+        case 'manual': {
+          const p = parseNumber(asset.manualPrice);
+          if (!p) throw new Error('Manuel fiyat girilmedi');
+          return { price: p, title: asset.name || asset.code || 'Manuel', source: 'Manuel' };
+        }
+        default:
+          throw new Error('Bilinmeyen varlık türü');
+      }
+    }
+
+    async function addAsset() {
+      const type = document.getElementById('assetType').value;
+      const code = document.getElementById('assetCode').value.trim().toUpperCase();
+      const name = document.getElementById('assetName').value.trim();
+      const qty = parseNumber(document.getElementById('assetQty').value);
+      const buy = parseNumber(document.getElementById('assetBuy').value);
+      const manualPrice = parseNumber(document.getElementById('assetManualPrice').value);
+
+      if (!qty || qty <= 0) {
+        showStatus('Miktar gir.', 'warn');
+        hideStatusLater();
+        return;
+      }
+      if (!buy || buy <= 0) {
+        showStatus('Alış fiyatı gir.', 'warn');
+        hideStatusLater();
+        return;
+      }
+      if (type === 'fund' && !code) {
+        showStatus('Fon kodu gir. Örn: TLY veya PHE', 'warn');
+        hideStatusLater();
+        return;
+      }
+      if (type === 'manual' && !manualPrice) {
+        showStatus('Manuel türünde güncel fiyat girmen lazım.', 'warn');
+        hideStatusLater();
+        return;
+      }
+
+      const asset = {
+        id: uid(),
+        type,
+        code: code || defaultCodeByType(type),
+        name: name || code || defaultCodeByType(type),
+        qty,
+        buy,
+        manualPrice: type === 'manual' ? manualPrice : 0,
+        current: type === 'manual' ? manualPrice : 0,
+        source: type === 'manual' ? 'Manuel' : 'Bekleniyor',
+        lastStatus: 'Henüz güncellenmedi',
+        lastError: '',
+        updatedAt: null
+      };
+
+      assets.unshift(asset);
+      saveAssets();
+      render();
+      clearForm();
+      showStatus('Varlık eklendi. Güncelleniyor...');
+      try {
+        await updateAsset(asset.id, false);
+      } catch (_) {}
+      hideStatusLater();
+    }
+
+    function defaultCodeByType(type) {
+      return ({ gold24: '24AYAR', gold22: '22AYAR', usd: 'USD', eur: 'EUR', manual: 'MANUEL' })[type] || '';
+    }
+
+    function clearForm() {
+      ['assetCode','assetName','assetQty','assetBuy','assetManualPrice'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('assetType').value = 'fund';
+      syncHints();
+    }
+
+    async function updateAsset(id, toast = true) {
+      const asset = assets.find(x => x.id === id);
+      if (!asset) return;
+      try {
+        const r = await resolveAutoPrice(asset);
+        asset.current = r.price;
+        if (!asset.name || asset.name === asset.code || asset.name === defaultCodeByType(asset.type)) asset.name = r.title || asset.name;
+        asset.source = r.source;
+        asset.updatedAt = new Date().toISOString();
+        asset.lastStatus = 'Güncel';
+        asset.lastError = '';
+        saveAssets();
+        render();
+        if (toast) {
+          showStatus((asset.code || asset.name) + ' güncellendi.');
+          hideStatusLater();
+        }
+      } catch (err) {
+        asset.lastStatus = 'Hata';
+        asset.lastError = err?.message || 'Veri alınamadı';
+        saveAssets();
+        render();
+        if (toast) {
+          showStatus((asset.code || asset.name) + ' güncellenemedi: ' + asset.lastError, 'error');
+          hideStatusLater();
+        }
+        throw err;
+      }
+    }
+
+    async function updateAll(toast = true) {
+      if (!assets.length) {
+        showStatus('Önce varlık ekle.', 'warn');
+        hideStatusLater();
+        return;
+      }
+      document.getElementById('liveInfo').textContent = 'Güncelleniyor...';
+      showStatus('Tüm varlıklar güncelleniyor...');
+      let ok = 0, bad = 0;
+      for (const item of assets) {
+        try {
+          await updateAsset(item.id, false);
+          ok++;
+        } catch {
+          bad++;
+        }
+      }
+      document.getElementById('liveInfo').textContent = bad ? `Bitti • ${ok} başarılı / ${bad} hata` : `Bitti • ${ok} başarılı`;
+      if (toast) {
+        showStatus(`Güncelleme tamamlandı. Başarılı: ${ok}, Hata: ${bad}`, bad ? 'warn' : 'info');
+        hideStatusLater();
+      }
+      render();
+    }
+
+    function removeAsset(id) {
+      assets = assets.filter(x => x.id !== id);
+      saveAssets();
+      render();
+    }
+
+    function editAsset(id) {
+      const item = assets.find(x => x.id === id);
+      if (!item) return;
+      const qty = prompt('Yeni miktar:', String(item.qty).replace('.', ','));
+      if (qty === null) return;
+      const buy = prompt('Yeni alış fiyatı:', String(item.buy).replace('.', ','));
+      if (buy === null) return;
+      item.qty = parseNumber(qty) || item.qty;
+      item.buy = parseNumber(buy) || item.buy;
+      if (item.type === 'manual') {
+        const mp = prompt('Yeni manuel güncel fiyat:', String(item.manualPrice || item.current).replace('.', ','));
+        if (mp !== null) {
+          item.manualPrice = parseNumber(mp) || item.manualPrice;
+          item.current = item.manualPrice;
+        }
+      }
+      saveAssets();
+      render();
+    }
+
+    function clearAllAssets() {
+      if (!confirm('Tüm varlıklar silinsin mi?')) return;
+      assets = [];
+      saveAssets();
+      render();
+      showStatus('Tüm varlıklar silindi.', 'warn');
+      hideStatusLater();
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(assets, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'takipoz-portfoy-yedek.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function triggerImport() {
+      document.getElementById('importFile').click();
+    }
+
+    function importJson(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          if (!Array.isArray(parsed)) throw new Error('Geçersiz yedek');
+          assets = parsed;
+          saveAssets();
+          render();
+          showStatus('Yedek yüklendi.');
+          hideStatusLater();
+        } catch (e) {
+          showStatus('Yedek yüklenemedi: ' + (e.message || 'Hata'), 'error');
+          hideStatusLater();
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+      event.target.value = '';
+    }
+
+    function statusBadge(item) {
+      if (item.lastStatus === 'Güncel') return '<span class="badge pill-ok">Güncel</span>';
+      if (item.lastStatus === 'Hata') return `<span class="badge pill-bad" title="${escapeHtml(item.lastError || '')}">Hata</span>`;
+      return '<span class="badge pill-warn">Bekliyor</span>';
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function render() {
+      const tbody = document.getElementById('assetRows');
+      if (!assets.length) {
+        tbody.innerHTML = '<tr><td colspan="9" class="muted">Henüz varlık eklenmedi.</td></tr>';
+        updateSummary();
+        return;
+      }
+
+      tbody.innerHTML = assets.map(item => {
+        const total = (item.current || 0) * (item.qty || 0);
+        const cost = (item.buy || 0) * (item.qty || 0);
+        const pnl = total - cost;
+        const pnlPct = cost ? (pnl / cost) * 100 : 0;
+        const codeName = `<div><b>${escapeHtml(item.code || '')}</b></div><div class="muted">${escapeHtml(item.name || '')}</div>`;
+        const updated = item.updatedAt ? new Date(item.updatedAt).toLocaleString('tr-TR') : '—';
+        const detail = item.lastError ? `title="${escapeHtml(item.lastError)}"` : `title="Kaynak: ${escapeHtml(item.source || '—')} • Son güncelleme: ${escapeHtml(updated)}"`;
+
+        return `
+          <tr>
+            <td><span class="badge">${escapeHtml(typeLabel(item.type))}</span></td>
+            <td>${codeName}</td>
+            <td>${fmtNum(item.qty, 6)}</td>
+            <td>${fmtMoney(item.buy)}</td>
+            <td>${fmtMoney(item.current || 0)}<div class="muted" ${detail}>${escapeHtml(item.source || '—')}</div></td>
+            <td>${fmtMoney(total)}</td>
+            <td class="${pnl >= 0 ? 'up' : 'down'}"><b>${fmtMoney(pnl)}</b><div>${pnl >= 0 ? '+' : ''}${fmtNum(pnlPct, 2)}%</div></td>
+            <td>${statusBadge(item)}</td>
+            <td>
+              <div class="row-actions">
+                <button class="mini secondary" onclick="updateAsset('${item.id}')">Güncelle</button>
+                <button class="mini ghost" onclick="editAsset('${item.id}')">Düzenle</button>
+                <button class="mini danger" onclick="removeAsset('${item.id}')">Sil</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      let total = 0, cost = 0;
+      let latest = null;
+      for (const item of assets) {
+        total += (item.current || 0) * (item.qty || 0);
+        cost += (item.buy || 0) * (item.qty || 0);
+        if (item.updatedAt && (!latest || item.updatedAt > latest)) latest = item.updatedAt;
+      }
+      const pnl = total - cost;
+      const pnlPct = cost ? (pnl / cost) * 100 : 0;
+      document.getElementById('sumTotal').textContent = fmtMoney(total);
+      document.getElementById('sumCost').textContent = fmtMoney(cost);
+      document.getElementById('sumPnL').textContent = fmtMoney(pnl);
+      document.getElementById('sumPnL').className = 'v ' + (pnl >= 0 ? 'up' : 'down');
+      document.getElementById('sumPnLPct').textContent = `${pnl >= 0 ? '+' : ''}${fmtNum(pnlPct, 2)}%`;
+      document.getElementById('sumAssets').textContent = `${assets.length} varlık`;
+      document.getElementById('sumUpdated').textContent = latest ? new Date(latest).toLocaleString('tr-TR') : '—';
+    }
+
+    syncHints();
+    render();
+    if (assets.length) updateAll(false);
+  </script>
+</body>
+</html>
