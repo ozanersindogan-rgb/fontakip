@@ -8,90 +8,112 @@
     :root{
       --bg:#071329;
       --card:#0c1d3d;
+      --card2:#0a1832;
       --muted:#91a0bf;
       --text:#eef4ff;
       --line:#1e3567;
       --blue:#2d79ff;
+      --blue2:#4fa3ff;
       --green:#27c56c;
       --red:#ff5a67;
       --amber:#c28d1c;
       --chip:#132750;
+      --shadow:0 12px 30px rgba(0,0,0,.22);
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:linear-gradient(180deg,#061022 0%,#071329 100%);
+      background:radial-gradient(circle at top,#0a1d42 0%,#071329 42%,#050d1d 100%);
       color:var(--text);
     }
-    .wrap{max-width:980px;margin:0 auto;padding:18px 14px 40px}
-    .hero{padding:10px 2px 16px}
-    h1{margin:4px 0 6px;font-size:32px;line-height:1.05}
+    .wrap{max-width:1080px;margin:0 auto;padding:16px 14px 44px}
+    .hero{
+      background:linear-gradient(180deg,rgba(18,41,85,.96) 0%,rgba(10,24,50,.96) 100%);
+      border:1px solid rgba(114,144,214,.18);
+      border-radius:30px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:before{
+      content:"";position:absolute;right:-80px;top:-80px;width:240px;height:240px;
+      background:radial-gradient(circle,var(--blue2) 0%,rgba(79,163,255,0) 70%);opacity:.18;pointer-events:none
+    }
+    .hero-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+    h1{margin:2px 0 6px;font-size:31px;line-height:1.05}
     .sub{color:var(--muted);font-size:14px}
+    .hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch;margin-top:18px}
+    @media (max-width:860px){.hero-grid{grid-template-columns:1fr}}
+    .summary-box{
+      background:rgba(255,255,255,.03);border:1px solid rgba(180,196,236,.1);border-radius:26px;padding:18px;
+      display:grid;grid-template-columns:repeat(2,1fr);gap:12px
+    }
+    .big-total{grid-column:1 / -1;background:linear-gradient(180deg,rgba(49,103,208,.18) 0%,rgba(21,44,93,.18) 100%)}
+    .mini-card{padding:14px 15px;border-radius:22px;background:rgba(255,255,255,.03);border:1px solid rgba(180,196,236,.1)}
+    .k{font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:700}
+    .v{font-size:24px;font-weight:900;letter-spacing:.2px}
+    .ok{color:var(--green)} .bad{color:var(--red)}
+    .chart-card{
+      background:linear-gradient(180deg,rgba(10,28,58,.95) 0%,rgba(10,23,48,.95) 100%);
+      border:1px solid rgba(114,144,214,.18);border-radius:26px;padding:18px
+    }
+    .chart-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+    .chart-wrap{display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:center}
+    @media (max-width:560px){.chart-wrap{grid-template-columns:1fr}}
+    .donut-shell{display:flex;align-items:center;justify-content:center;position:relative;min-height:180px}
+    .donut-center{position:absolute;text-align:center}
+    .donut-center strong{display:block;font-size:28px}
+    .donut-center span{display:block;color:var(--muted);font-size:13px}
+    .legend{display:grid;gap:10px}
+    .legend-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center}
+    .dot{width:12px;height:12px;border-radius:50%}
+    .bar{height:10px;border-radius:999px;background:#112654;overflow:hidden;position:relative}
+    .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue2),var(--blue))}
+    .legend small{color:var(--muted)}
     .card{
       background:rgba(12,29,61,.94);
       border:1px solid rgba(114,144,214,.18);
       border-radius:26px;
-      box-shadow:0 10px 30px rgba(0,0,0,.18);
+      box-shadow:var(--shadow);
       padding:18px;
       margin-top:14px;
     }
     .grid{display:grid;gap:12px}
     .grid-2{grid-template-columns:1fr 1fr}
-    .grid-3{grid-template-columns:repeat(3,1fr)}
-    .grid-4{grid-template-columns:repeat(4,1fr)}
-    @media (max-width:820px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr 1fr}}
-    @media (max-width:560px){.grid-4,.grid-3,.grid-2{grid-template-columns:1fr}}
+    @media (max-width:720px){.grid-2{grid-template-columns:1fr}}
     label{display:block;margin:2px 0 6px;color:#d3dcf3;font-weight:600}
-    input,select,button{
-      width:100%;border:none;outline:none;border-radius:18px;font-size:16px;
-    }
-    input,select{
-      background:#091734;color:var(--text);padding:16px 15px;border:1px solid #203867;
-    }
+    input,select,button{width:100%;border:none;outline:none;border-radius:18px;font-size:16px}
+    input,select{background:#091734;color:var(--text);padding:16px 15px;border:1px solid #203867}
     input::placeholder{color:#6f84b3}
-    .actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+    .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px}
+    @media (max-width:860px){.actions{grid-template-columns:1fr 1fr}}
+    @media (max-width:520px){.actions{grid-template-columns:1fr}}
     button{
       padding:16px 14px;font-weight:800;cursor:pointer;color:white;
       background:linear-gradient(180deg,#4388ff 0%,#2d79ff 100%);
-      box-shadow:0 8px 20px rgba(45,121,255,.28);
+      box-shadow:0 8px 20px rgba(45,121,255,.28)
     }
     button.secondary{background:#253a67;box-shadow:none}
     button.amber{background:#9b6204;box-shadow:none}
-    button.danger{background:#b32135;box-shadow:none}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    @media (max-width:820px){.stats{grid-template-columns:1fr 1fr}}
-    .stat{
-      background:rgba(255,255,255,.03);border:1px solid rgba(180,196,236,.1);border-radius:24px;padding:18px
-    }
-    .stat .k{font-size:14px;color:var(--muted);margin-bottom:8px;font-weight:700}
-    .stat .v{font-size:23px;font-weight:900;letter-spacing:.2px}
-    .ok{color:var(--green)} .bad{color:var(--red)}
     .market{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media (max-width:720px){.market{grid-template-columns:1fr}}
-    .pill{
-      background:var(--chip);border:1px solid #203867;border-radius:18px;padding:14px 16px;
-      display:flex;justify-content:space-between;gap:10px;align-items:center
-    }
+    .pill{background:var(--chip);border:1px solid #203867;border-radius:18px;padding:14px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}
     .pill small{color:var(--muted);font-weight:700}
     .pill strong{font-size:18px}
-    .note{
-      margin-top:14px;padding:16px;border-radius:20px;background:rgba(194,141,28,.08);
-      border:1px solid rgba(194,141,28,.35);color:#f3e0a7;line-height:1.45
-    }
+    .note{margin-top:14px;padding:16px;border-radius:20px;background:rgba(194,141,28,.08);border:1px solid rgba(194,141,28,.35);color:#f3e0a7;line-height:1.45}
+    .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .chip{display:inline-block;padding:8px 12px;border-radius:999px;background:#132750;border:1px solid #1f3a72;color:#edf4ff;font-weight:700}
     .table-wrap{overflow:auto;border-radius:22px;border:1px solid #1e3567}
-    table{width:100%;border-collapse:collapse;min-width:760px;background:#091734}
+    table{width:100%;border-collapse:collapse;min-width:780px;background:#091734}
     th,td{padding:14px 12px;border-bottom:1px solid #1a2e59;text-align:left}
     th{color:#c8d5f4;font-size:13px;letter-spacing:.4px;text-transform:uppercase}
     td{font-size:15px}
-    .chip{
-      display:inline-block;padding:8px 12px;border-radius:999px;background:#132750;border:1px solid #1f3a72;color:#edf4ff;font-weight:700
-    }
     .row-actions{display:flex;gap:8px;align-items:center}
     .mini{padding:10px 12px;border-radius:12px;font-size:13px;font-weight:800;width:auto}
-    .mini.secondary{background:#2a3f6c}
-    .mini.danger{background:#8b2330}
     .mini.green{background:#0d8a4a}
+    .mini.danger{background:#8b2330}
     .inline-input{width:110px;padding:10px 12px;border-radius:12px;background:#0a1a39;border:1px solid #25437b;color:#fff}
     .footer{margin-top:16px;color:#8ea1c8;font-size:13px;line-height:1.5}
     .hidden{display:none}
@@ -100,12 +122,70 @@
 <body>
   <div class="wrap">
     <div class="hero">
-      <h1>Portföy Takip</h1>
-      <div class="sub">Altın, döviz, PAXG ve manuel fiyatlı fon takibi. Tek dosya çalışır.</div>
+      <div class="hero-top">
+        <div>
+          <h1>Portföy Takip</h1>
+          <div class="sub">Görsel özet üstte, giriş alanları altta. Yedek al / yükle aynen devam eder.</div>
+        </div>
+        <span class="chip" id="heroState">Hazır</span>
+      </div>
+
+      <div class="hero-grid">
+        <div class="summary-box">
+          <div class="mini-card big-total">
+            <div class="k">Toplam Portföy</div>
+            <div class="v" id="sumValue">₺0,00</div>
+            <div class="sub"><span id="assetCount">0</span> varlık</div>
+          </div>
+          <div class="mini-card">
+            <div class="k">Maliyet</div>
+            <div class="v" id="sumCost">₺0,00</div>
+            <div class="sub">Alış toplamı</div>
+          </div>
+          <div class="mini-card">
+            <div class="k">Kâr / Zarar</div>
+            <div class="v" id="sumPnL">₺0,00</div>
+            <div class="sub" id="sumPct">%0,00</div>
+          </div>
+          <div class="mini-card">
+            <div class="k">Son Güncelleme</div>
+            <div class="v" id="lastUpdated">-</div>
+            <div class="sub" id="statusLine">Hazır</div>
+          </div>
+          <div class="mini-card">
+            <div class="k">En Büyük Varlık</div>
+            <div class="v" id="largestAsset">-</div>
+            <div class="sub" id="largestShare">-</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head">
+            <div>
+              <div style="font-size:22px;font-weight:800">Dağılım Görünümü</div>
+              <div class="sub">Güncel değerlere göre</div>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <div class="donut-shell">
+              <svg id="donut" width="180" height="180" viewBox="0 0 180 180" aria-label="Portföy dağılımı"></svg>
+              <div class="donut-center">
+                <strong id="donutCount">0</strong>
+                <span>varlık</span>
+              </div>
+            </div>
+            <div class="legend" id="legend"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="grid grid-2">
+      <div class="section-head">
+        <h2 style="margin:0;font-size:24px">Yeni Varlık Ekle</h2>
+        <span class="chip">Yedekli</span>
+      </div>
+      <div class="grid grid-2" style="margin-top:14px">
         <div>
           <label for="type">Varlık türü</label>
           <select id="type">
@@ -145,33 +225,11 @@
     </div>
 
     <div class="card">
-      <div class="stats">
-        <div class="stat">
-          <div class="k">Toplam Portföy</div>
-          <div class="v" id="sumValue">₺0,00</div>
-          <div class="sub"><span id="assetCount">0</span> varlık</div>
-        </div>
-        <div class="stat">
-          <div class="k">Maliyet</div>
-          <div class="v" id="sumCost">₺0,00</div>
-          <div class="sub">Alış toplamı</div>
-        </div>
-        <div class="stat">
-          <div class="k">Kâr / Zarar</div>
-          <div class="v" id="sumPnL">₺0,00</div>
-          <div class="sub" id="sumPct">%0,00</div>
-        </div>
-        <div class="stat">
-          <div class="k">Son Güncelleme</div>
-          <div class="v" id="lastUpdated">-</div>
-          <div class="sub" id="statusLine">Hazır</div>
-        </div>
+      <div class="section-head">
+        <h2 style="margin:0;font-size:24px">Piyasa Durumu</h2>
+        <span class="chip" id="marketChip">Hazır</span>
       </div>
-    </div>
-
-    <div class="card">
-      <h2 style="margin:0 0 14px;font-size:24px">Piyasa Durumu</h2>
-      <div class="market">
+      <div class="market" style="margin-top:14px">
         <div class="pill"><small>24 Ayar</small><strong id="mGold24">-</strong></div>
         <div class="pill"><small>22 Ayar</small><strong id="mGold22">-</strong></div>
         <div class="pill"><small>USD/TRY</small><strong id="mUsd">-</strong></div>
@@ -185,7 +243,7 @@
     </div>
 
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <div class="section-head">
         <h2 style="margin:0;font-size:24px">Varlık Listesi</h2>
         <span class="chip">Hazır</span>
       </div>
@@ -214,9 +272,10 @@
 
 <script>
 (() => {
-  const STORAGE_KEY = 'portfoy_final_v3';
+  const STORAGE_KEY = 'portfoy_final_v4';
   let assets = loadAssets();
   let market = { gold24:null, gold22:null, usd:null, eur:null, paxg:null, status:'Hazır', updatedAt:null };
+  const chartColors = ['#4fa3ff','#2fd07f','#ffb341','#b784ff','#ff6b8f','#38d9d9','#7fa6ff','#8bd450'];
 
   const el = (id) => document.getElementById(id);
 
@@ -229,7 +288,6 @@
     else if (s.includes(',')) s = s.replace(',', '.');
     return Number(s);
   }
-
   function fmtTRY(n){
     if (!Number.isFinite(n)) return '-';
     return new Intl.NumberFormat('tr-TR', { style:'currency', currency:'TRY', maximumFractionDigits:2 }).format(n);
@@ -238,25 +296,25 @@
     if (!Number.isFinite(n)) return '-';
     return new Intl.NumberFormat('tr-TR', { minimumFractionDigits:d, maximumFractionDigits:d }).format(n);
   }
+  function fmtPct(n){
+    if (!Number.isFinite(n)) return '-';
+    return '%' + new Intl.NumberFormat('tr-TR', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(n);
+  }
   function typeLabel(type){
     return ({fund_manual:'Fon', gold24:'Gram Altın 24', gold22:'Gram Altın 22', usd:'USD/TRY', eur:'EUR/TRY', paxg:'PAXG/TL', manual:'Manual'})[type] || type;
   }
-
   function saveAssets(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(assets)); }
   function loadAssets(){
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-    catch { return []; }
+    try {
+      const v4 = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if (Array.isArray(v4)) return v4;
+      const old = JSON.parse(localStorage.getItem('portfoy_final_v3') || '[]');
+      return Array.isArray(old) ? old : [];
+    } catch { return []; }
   }
-
   function syncTypeDefaults(){
     const type = el('type').value;
-    const defaults = {
-      gold24: '24 Ayar',
-      gold22: '22 Ayar',
-      usd: 'USD',
-      eur: 'EUR',
-      paxg: 'PAXG'
-    };
+    const defaults = { gold24: '24 Ayar', gold22: '22 Ayar', usd: 'USD', eur: 'EUR', paxg: 'PAXG' };
     if (defaults[type] && !el('code').value.trim()) el('code').value = defaults[type];
   }
 
@@ -273,16 +331,13 @@
   async function updateMarket(){
     const errors = [];
     let usdTry = null;
-
     try {
       const fx = await fetchJSON('https://open.er-api.com/v6/latest/USD');
       if (fx && fx.result === 'success' && fx.rates && typeof fx.rates.TRY === 'number' && typeof fx.rates.EUR === 'number') {
         usdTry = fx.rates.TRY;
         market.usd = usdTry;
         market.eur = usdTry / fx.rates.EUR;
-      } else {
-        throw new Error('Kur verisi okunamadı');
-      }
+      } else throw new Error('Kur verisi okunamadı');
     } catch (e) {
       errors.push('USD/EUR: ' + e.message);
       market.usd = market.eur = null;
@@ -294,9 +349,7 @@
         const gram24 = (gold.price / 31.1034768) * usdTry;
         market.gold24 = gram24;
         market.gold22 = gram24 * (22/24);
-      } else {
-        throw new Error('Altın verisi okunamadı');
-      }
+      } else throw new Error('Altın verisi okunamadı');
     } catch (e) {
       errors.push('Altın: ' + e.message);
       market.gold24 = market.gold22 = null;
@@ -324,7 +377,6 @@
     if (asset.type === 'usd') return market.usd;
     if (asset.type === 'eur') return market.eur;
     if (asset.type === 'paxg') return market.paxg;
-    if (asset.type === 'manual' && Number.isFinite(asset.manualCurrent)) return asset.manualCurrent;
     return null;
   }
 
@@ -334,9 +386,60 @@
     el('mUsd').textContent = fmtTRY(market.usd);
     el('mEur').textContent = fmtTRY(market.eur);
     el('mPaxg').textContent = fmtTRY(market.paxg);
-    el('mState').textContent = errors.length ? 'Hata' : 'Güncel';
+    const state = errors.length ? 'Kısmi Hata' : 'Güncel';
+    el('mState').textContent = state;
+    el('marketChip').textContent = state;
+    el('heroState').textContent = state;
     el('lastUpdated').textContent = market.updatedAt || '-';
     el('statusLine').textContent = errors.length ? errors.join(' | ').slice(0,140) : 'Bağlantı tamam';
+  }
+
+  function buildDistribution(){
+    return assets.map((a, i) => {
+      const cp = currentPriceFor(a);
+      const total = Number.isFinite(cp) ? a.qty * cp : 0;
+      return { index:i, label:a.code || typeLabel(a.type), total, color:chartColors[i % chartColors.length] };
+    }).filter(x => x.total > 0).sort((a,b) => b.total - a.total);
+  }
+
+  function renderDonut(items){
+    const svg = el('donut');
+    const legend = el('legend');
+    el('donutCount').textContent = assets.length;
+    if (!items.length) {
+      svg.innerHTML = '<circle cx="90" cy="90" r="62" fill="none" stroke="#18325f" stroke-width="24"></circle>';
+      legend.innerHTML = '<div class="sub">Dağılım için güncel değeri olan varlık ekle.</div>';
+      el('largestAsset').textContent = '-';
+      el('largestShare').textContent = '-';
+      return;
+    }
+    const total = items.reduce((s,x)=>s+x.total,0);
+    const top = items[0];
+    el('largestAsset').textContent = top.label;
+    el('largestShare').textContent = fmtPct((top.total/total)*100);
+
+    const r = 62, c = 2 * Math.PI * r;
+    let offset = 0;
+    let circles = '<circle cx="90" cy="90" r="62" fill="none" stroke="#18325f" stroke-width="24"></circle>';
+    items.slice(0,6).forEach(item => {
+      const part = item.total / total;
+      const len = Math.max(part * c, 8);
+      circles += `<circle cx="90" cy="90" r="62" fill="none" stroke="${item.color}" stroke-width="24" stroke-linecap="round" transform="rotate(-90 90 90)" stroke-dasharray="${len} ${c-len}" stroke-dashoffset="${-offset}"></circle>`;
+      offset += len;
+    });
+    svg.innerHTML = circles;
+
+    legend.innerHTML = items.slice(0,6).map(item => {
+      const pct = (item.total / total) * 100;
+      return `<div class="legend-item">
+        <span class="dot" style="background:${item.color}"></span>
+        <div>
+          <div>${escapeHtml(item.label)}</div>
+          <div class="bar"><div class="fill" style="width:${pct}% ; background:${item.color}"></div></div>
+        </div>
+        <small>${fmtPct(pct)}</small>
+      </div>`;
+    }).join('');
   }
 
   function render(){
@@ -381,8 +484,10 @@
     el('sumCost').textContent = fmtTRY(totalCost);
     el('sumPnL').textContent = fmtTRY(pnl);
     el('sumPnL').className = 'v ' + ((Number.isFinite(pnl) && pnl < 0) ? 'bad' : 'ok');
-    el('sumPct').textContent = Number.isFinite(pct) ? '%' + new Intl.NumberFormat('tr-TR', { minimumFractionDigits:2, maximumFractionDigits:2 }).format(pct) : '-';
+    el('sumPct').textContent = fmtPct(pct);
     el('assetCount').textContent = assets.length;
+
+    renderDonut(buildDistribution());
   }
 
   function escapeHtml(str){
@@ -395,7 +500,6 @@
     const qty = parseTRNumber(el('qty').value);
     const buy = parseTRNumber(el('buy').value);
     const manualCurrent = parseTRNumber(el('manualCurrent').value);
-
     if (!Number.isFinite(qty) || qty <= 0) return alert('Miktar yanlış.');
     if (!Number.isFinite(buy) || buy < 0) return alert('Alış fiyatı yanlış.');
 
@@ -420,7 +524,6 @@
     const n = parseTRNumber(value);
     assets[index]._draftManual = Number.isFinite(n) ? n : null;
   }
-
   function applyManual(index){
     const item = assets[index];
     item.manualCurrent = Number.isFinite(item._draftManual) ? item._draftManual : null;
@@ -428,14 +531,12 @@
     saveAssets();
     render();
   }
-
   function removeAsset(index){
     if (!confirm('Bu varlık silinsin mi?')) return;
     assets.splice(index,1);
     saveAssets();
     render();
   }
-
   function backup(){
     const blob = new Blob([JSON.stringify({ assets, savedAt:new Date().toISOString() }, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
@@ -444,7 +545,6 @@
     a.click();
     URL.revokeObjectURL(a.href);
   }
-
   function restore(file){
     const reader = new FileReader();
     reader.onload = () => {
@@ -461,7 +561,6 @@
   }
 
   window.portfoyApp = { setManual, applyManual, removeAsset };
-
   el('type').addEventListener('change', syncTypeDefaults);
   el('addBtn').addEventListener('click', addAsset);
   el('refreshBtn').addEventListener('click', async () => { await updateMarket(); render(); });
